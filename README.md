@@ -58,21 +58,19 @@ All chart data is **strongly typed using TypeScript** to ensure reliability.
 ## 📁 Project Structure
 
 globetrotter/
-├── app/ # Next.js App Router (TypeScript)
-├── prisma/ # Prisma schema & migrations
-├── lib/ # Auth, DB, validators
-├── components/ # Reusable UI components
-├── types/ # Shared TypeScript types
-├── utils/ # Helper functions
-├── public/ # Static assets
-├── styles/ # Global styles
-├── .env.example # Environment variables template
-├── tsconfig.json # TypeScript configuration
-├── tailwind.config.js # Tailwind configuration
-├── package.json # Project dependencies & scripts
-└── README.md # Project documentation
-
----
+├── app/                     # Next.js App Router (TypeScript)
+├── prisma/                  # Prisma schema & migrations
+├── lib/                     # Auth, DB, validators
+├── components/              # Reusable UI components
+├── types/                   # Shared TypeScript types
+├── utils/                   # Helper functions
+├── public/                  # Static assets
+├── styles/                  # Global styles
+├── .env.example             # Environment variables template
+├── tsconfig.json            # TypeScript configuration
+├── tailwind.config.js       # Tailwind configuration
+├── package.json             # Project dependencies & scripts
+└── README.md                # Project documentation
 
 ## 🛠️ Installation & Setup
 
