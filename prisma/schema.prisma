@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  username          String    @unique
+  password          String
+  firstName         String
+  lastName          String
+  phoneNumber       String?
+  city              String?
+  country           String?
+  photo             String?
+  additionalInfo    String?
+  role              String    @default("user") // "user" or "admin"
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  trips             Trip[]
+  communityPosts    CommunityPost[]
+  sessions          Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Trip {
+  id              String     @id @default(cuid())
+  userId          String
+  title           String
+  place           String
+  startDate       DateTime
+  endDate         DateTime
+  status          String     @default("upcoming") // "ongoing", "upcoming", "completed"
+  imageUrl        String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itinerary       Itinerary?
+  suggestions     Suggestion[]
+}
+
+model Itinerary {
+  id              String    @id @default(cuid())
+  tripId          String    @unique
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  trip            Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  sections        Section[]
+}
+
+model Section {
+  id              String    @id @default(cuid())
+  itineraryId     String
+  title           String
+  description     String?
+  dateRange       String
+  budget          Float
+  order           Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  itinerary       Itinerary @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+  activities      Activity[]
+}
+
+model Activity {
+  id              String    @id @default(cuid())
+  sectionId       String
+  day             Int
+  name            String
+  description     String?
+  expense         Float
+  type            String    // "physical", "cultural", "dining", etc.
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  section         Section   @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+}
+
+model Suggestion {
+  id              String    @id @default(cuid())
+  tripId          String
+  name            String
+  description     String?
+  imageUrl        String?
+  type            String    // "place", "activity"
+  createdAt       DateTime  @default(now())
+  
+  trip            Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+}
+
+model CommunityPost {
+  id              String    @id @default(cuid())
+  userId          String
+  tripId          String?
+  content         String
+  imageUrl        String?
+  likes           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PopularCity {
+  id              String    @id @default(cuid())
+  name            String
+  country         String
+  imageUrl        String?
+  visitCount      Int       @default(0)
+  createdAt       DateTime  @default(now())
+}
+
+model PopularActivity {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  imageUrl        String?
+  participantCount Int      @default(0)
+  createdAt       DateTime  @default(now())
+}
